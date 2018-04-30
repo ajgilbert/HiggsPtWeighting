@@ -251,8 +251,6 @@ class Jobs:
             print '>> condor job script will be %s' % outscriptname
             outscript = open(outscriptname, "w")
             DO_JOB_PREFIX = JOB_PREFIX % ({
-              'CMSSW_BASE': os.environ['CMSSW_BASE'],
-              'SCRAM_ARCH': os.environ['SCRAM_ARCH'],
               'PWD': (os.environ['PWD'] if self.args.cwd else '${INITIALDIR}')
             })
             outscript.write(DO_JOB_PREFIX)

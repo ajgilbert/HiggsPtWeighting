@@ -1,0 +1,12 @@
+A_*
+H_*
+s_*
+*.err
+*.out
+*.log
+job*.sh
+RunPythia
+condor*.sh
+condor*.sub
+*.pyc
+POWHEG-BOX-V2
