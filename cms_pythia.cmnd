@@ -1,0 +1,27 @@
+Beams:frameType = 4
+Main:timesAllowErrors = 10000
+Check:epTolErr = 0.01
+Beams:setProductionScalesFromLHEF = off
+SLHA:keepSM = on
+SLHA:minMassSM = 1000.
+ParticleDecays:limitTau0 = on
+ParticleDecays:tau0Max = 10
+ParticleDecays:allowPhotonRadiation = on
+Tune:pp 14
+Tune:ee 7
+MultipartonInteractions:pT0Ref=2.4024
+MultipartonInteractions:ecmPow=0.25208
+MultipartonInteractions:expPow=1.6
+POWHEG:veto = 1
+POWHEG:pTdef = 1
+POWHEG:emitted = 0
+POWHEG:pTemt = 0
+POWHEG:pThard = 0
+POWHEG:vetoCount = 100
+SpaceShower:pTmaxMatch = 2
+TimeShower:pTmaxMatch = 2
+POWHEG:nFinal = 1
+Higgs:useBSM = on
+36:onMode = off
+36:onIfAny = 15
+36:m0 = 100
