@@ -16,6 +16,9 @@ parser.add_argument('-c', '--contribution', default='t:t')
 parser.add_argument('-H', '--higgs-tanb', default='H:15')
 parser.add_argument('--step', default='none', choices=['none', 'lhe', 'xsec', 'shower', 'workspace'])
 parser.add_argument('--shower-cmd', default='./RunPythia cms_pythia.cmnd')
+parser.add_argument('--variations', dest='variations', action='store_true')
+parser.set_defaults(variations=False)
+
 
 job_mgr.attach_job_args(parser)
 args = parser.parse_args()
@@ -33,6 +36,12 @@ higgs_pdg = {
         'H': '35',
         'A': '36'
         }
+# See https://phystev.cnrs.fr/wiki/2013:groups:tools_lheextension for desctioption of reweighting format
+variations = {
+    "NOMINAL": ['0','1',"NOMINAL","NOMINAL","none"], #"compute_rwgt,lhrwgt_id,lhrwgt_descr,lhrwgt_group_name,lhrwgt_group_combine", 
+    "resup": ['0','2',"mu_res=.5","mu_res_variation","envelope"],
+}
+
 
 mvec = []
 qt = []
@@ -65,6 +74,11 @@ for pars in product(args.higgs_tanb.split(','), args.mass.split(','), args.contr
         pwhg_cfg = pwhg_cfg.replace('{MASS}', MASS)
         pwhg_cfg = pwhg_cfg.replace('{TANB}', TANB)
         pwhg_cfg = pwhg_cfg.replace('{HIGGSTYPE}', higgstype[HIGGS])
+        pwhg_cfg = pwhg_cfg.replace('{NOMINAL}', variations['NOMINAL'][0])
+        pwhg_cfg = pwhg_cfg.replace('{ID}', variations['NOMINAL'][1])
+        pwhg_cfg = pwhg_cfg.replace('{DESCR}', variations['NOMINAL'][2])
+        pwhg_cfg = pwhg_cfg.replace('{GROUPNAME}', variations['NOMINAL'][3])
+        pwhg_cfg = pwhg_cfg.replace('{COMBINE}', variations['NOMINAL'][4])
 
         base_cmd = ''
 

@@ -90,3 +90,10 @@ higgstype {HIGGSTYPE}
 2HDMtype 2
 tanb {TANB}
 alpha 0.785398163397448d0
+!reweighing information (experimantal implementation by Guillermo)
+storeinfo_rwgt 1          ! store weight information in subsequent runs
+compute_rwgt {NOMINAL}    ! implement a weight, 0 for first nominal sample, 1 thereafter
+lhrwgt_id '{ID}'
+lhrwgt_descr '{DESCR}'
+lhrwgt_group_name '{GROUPNAME}'
+lhrwgt_group_combine '{COMBINE}'
