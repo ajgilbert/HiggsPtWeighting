@@ -48,6 +48,14 @@ hfact    {HFACT}    ! (default no dumping factor) dump factor for high-pt radiat
 #bottomthrpdf 5.0  ! (default 5.0 GeV) pdf bottom treshold
 withnegweights 1 ! use negative weights
 
+! reweighting information
+storeinfo_rwgt 1          ! store weight information in subsequent runs
+compute_rwgt 0            ! implement a weight, 0 for first nominal sample, 1 thereafter
+lhrwgt_id '0'               
+lhrwgt_descr 'NOMINAL'            
+lhrwgt_group_name 'NOMINAL'       
+lhrwgt_group_combine 'none'
+
 # mur,muf settings
 runningscale 0    ! 0 = scales equal to the Higgs pole mass; 1  = scales equal to the Higgs virtuality; 
                   ! 2 = scales equal to the Higgs pole mass for Born-like configuration and to the transverse mass for real emission contribution
@@ -91,9 +99,4 @@ higgstype {HIGGSTYPE}
 tanb {TANB}
 alpha 0.785398163397448d0
 !reweighing information (experimantal implementation by Guillermo)
-storeinfo_rwgt 1          ! store weight information in subsequent runs
-compute_rwgt {NOMINAL}    ! implement a weight, 0 for first nominal sample, 1 thereafter
-lhrwgt_id '{ID}'
-lhrwgt_descr '{DESCR}'
-lhrwgt_group_name '{GROUPNAME}'
-lhrwgt_group_combine '{COMBINE}'
+    
