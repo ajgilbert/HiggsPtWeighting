@@ -26,7 +26,8 @@ int main(int argc, char *argv[]) {
   TTree t("hpt", "hpt");
 
   float hpt = 0.;
-  float wt = 0.;
+  //float wt = 0.; Moving to vector definition in order to include multiple weights
+  std::vector<float> wt;
   t.Branch("hpt", &hpt);
   t.Branch("wt", &wt);
 
@@ -79,7 +80,16 @@ int main(int argc, char *argv[]) {
       std::cout << "Did not find the last Higgs!\n";
     } else {
       hpt = pythia.event[last_higgs_idx].p().pT();
-      wt =  pythia.info.weight();
+      wt.clear();
+      std::cout << "There are these many weights!"<<pythia.info.getWeightsDetailedSize()<<"\n";
+      //for (int i = 0; i < pythia.info.nWeights(); i++){
+      for (int i = 0; i < pythia.info.getWeightsDetailedSize(); i++){
+	//wt.push_back(pythia.info.weight(i));
+	cout<< pythia.info.getWeightsDetailedValue(std::to_string(i));
+	wt.push_back(pythia.info.getWeightsDetailedValue(std::to_string(i)));
+	std::cout << "weight number i="<<i<<"\n";
+
+      }
       t.Fill();
     }
     if (iEvent % 100 == 0) {
