@@ -74,6 +74,12 @@ int main(int argc, char *argv[]) {
             last_higgs_idx = i;
           }
         }
+	//else{
+	//  std::cout << "Higgs Daughters \n";
+	//  for (int i = 0; i < part.daughterList().size(); ++i){
+	//    std::cout << pythia.event[part.daughterList()[i]].id() << " \n";
+	//  }
+	//}
       }
     }
     if (!found_last_higgs) {
@@ -85,9 +91,9 @@ int main(int argc, char *argv[]) {
       //for (int i = 0; i < pythia.info.nWeights(); i++){
       for (int i = 0; i < pythia.info.getWeightsDetailedSize(); i++){
 	//wt.push_back(pythia.info.weight(i));
-	cout<< pythia.info.getWeightsDetailedValue(std::to_string(i));
+	//cout<< pythia.info.getWeightsDetailedValue(std::to_string(i));
 	wt.push_back(pythia.info.getWeightsDetailedValue(std::to_string(i)));
-	std::cout << "weight number i="<<i<<"\n";
+	//std::cout << "weight number i="<<i<<"\n";
 
       }
       t.Fill();

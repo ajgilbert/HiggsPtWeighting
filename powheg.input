@@ -30,8 +30,8 @@ xupbound 2d0   ! increase upper bound for radiation generation
 
 ! OPTIONAL PARAMETERS
 
-#renscfact  1   ! (default 1d0) ren scale factor: muren  = muref * renscfact
-#facscfact  1   ! (default 1d0) fac scale factor: mufact = muref * facscfact
+renscfact  0.5   ! (default 1d0) ren scale factor: muren  = muref * renscfact
+facscfact  0.5   ! (default 1d0) fac scale factor: mufact = muref * facscfact
 #ptsupp     0d0   ! (default 0d0)  mass param for Born suppression factor (generation cut) If < 0 suppfact = 1
 #bornonly   1      ! (default 0) if 1 do Born only
 #smartsig   0      ! (default 1) remember equal amplitudes (0 do not remember)

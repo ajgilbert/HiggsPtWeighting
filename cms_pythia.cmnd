@@ -25,3 +25,5 @@ Higgs:useBSM = on
 36:onMode = off
 36:onIfAny = 15
 36:m0 = 100
+35:onMode = off
+35:onIfAny = 15

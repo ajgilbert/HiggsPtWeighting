@@ -57,8 +57,8 @@ class Variations(object):
 variations = [
     Variations(rwgt_id='1',descr="mu_res=0.5",    group_name="mu_res_variation",  group_combine="envelope",rensfact = '1', facsfact = '1', hfactscale = 0.5),
     Variations(rwgt_id='2',descr="mu_res=2",      group_name="mu_res_variation",  group_combine="envelope",rensfact = '1', facsfact = '1', hfactscale = 2),
-    Variations(rwgt_id='3',descr="mu_F=mu_R=0.5", group_name="mu_scale_variation",group_combine="envelope",rensfact = '0.5', facsfact = '0.5', hfactscale = 1),
-    Variations(rwgt_id='4',descr="mu_F=mu_R=0.25",group_name="mu_scale_variation",group_combine="envelope",rensfact = '0.25', facsfact = '0.25', hfactscale = 1)
+    Variations(rwgt_id='3',descr="mu_F=mu_R=0.25", group_name="mu_scale_variation",group_combine="envelope",rensfact = '0.25', facsfact = '0.25', hfactscale = 1),
+    Variations(rwgt_id='4',descr="mu_F=mu_R=1",group_name="mu_scale_variation",group_combine="envelope",rensfact = '1.0', facsfact = '1.0', hfactscale = 1)
 ]
 
 # Fuctions which takes care of altering input file for uncertainty variations
@@ -119,13 +119,16 @@ for pars in product(args.higgs_tanb.split(','), args.mass.split(','), args.contr
         key = '%s_%s_%s_%s_%s' % (HIGGS, MASS, TANB, CONT, SCALE)
         
         if args.step == 'lhe':
+            if os.path.isfile(os.path.join(key,'powheg.input')):
+                print ("File %s exists, will skip".format(os.path.join(key,'powheg.input')))
+                continue
             cfg = pwhg_cfg
             cfg = cfg.replace('{HFACT}', str(int(round(gr[SCALE].Eval(float(MASS))))))
             if CONT == 't':
                 cfg += 'nobot 1\n'
             if CONT == 'b':
                 cfg += 'notop 1\n'
-        
+                
             os.system('mkdir -p %s' % key)
 
             with open(os.path.join(key,'powheg.input'), "w") as outfile:
