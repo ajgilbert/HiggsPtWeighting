@@ -72,8 +72,8 @@ def writeVariationFiles(key=None,hfac=None):
         cfg = cfg.replace('lhrwgt_descr'             ,'lhrwgt_descr \''             +var.descr+"\' !")
         cfg = cfg.replace('lhrwgt_group_name'        ,'lhrwgt_group_name \''        +var.group_name+"\' !")
         cfg = cfg.replace('lhrwgt_group_combine'     ,'lhrwgt_group_combine \''     +var.group_combine+"\' !")
-        cfg = cfg.replace('#renscfact','renscfact '+var.rensfact+" !")
-        cfg = cfg.replace('#facscfact','facscfact '+var.facsfact+" !")
+        cfg = cfg.replace('renscfact','renscfact '+var.rensfact+" !")
+        cfg = cfg.replace('facscfact','facscfact '+var.facsfact+" !")
         cfg = cfg.replace('hfact','hfact '+str(int(round(var.hfactscale*hfac)))+" !") # multiply hfac by scale, and update config
         
         with open(os.path.join(key,'powheg'+var.rwgt_id+'.input'), "w") as outfile:
