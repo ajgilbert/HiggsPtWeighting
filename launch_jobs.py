@@ -16,6 +16,9 @@ parser.add_argument('-c', '--contribution', default='t:t')
 parser.add_argument('-H', '--higgs-tanb', default='H:15')
 parser.add_argument('--step', default='none', choices=['none', 'lhe', 'xsec', 'shower', 'workspace'])
 parser.add_argument('--shower-cmd', default='./RunPythia cms_pythia.cmnd')
+parser.add_argument('--dovariations', dest='dovariations', action='store_true')
+parser.set_defaults(dovariations=False)
+
 
 job_mgr.attach_job_args(parser)
 args = parser.parse_args()
@@ -33,6 +36,51 @@ higgs_pdg = {
         'H': '35',
         'A': '36'
         }
+
+class Variations(object):
+    rwgt_id                ='ID'
+    descr             ='Description'
+    group_name        ='GROUPNAME'
+    group_combine     ='COMBINE'
+    rensfact = '1'
+    facsfact = '1'
+    hfactscale = 1
+    def __init__(self,rwgt_id,descr,group_name,group_combine,rensfact, facsfact, hfactscale):
+        self.rwgt_id       = rwgt_id          
+        self.descr         = descr            
+        self.group_name    = group_name       
+        self.group_combine = group_combine
+        self.rensfact =  rensfact
+        self.facsfact =  facsfact
+        self.hfactscale =  hfactscale
+# See https://phystev.cnrs.fr/wiki/2013:groups:tools_lheextension for desctioption of reweighting format
+variations = [
+    Variations(rwgt_id='1',descr="mu_res=0.5",    group_name="mu_res_variation",  group_combine="envelope",rensfact = '0.5', facsfact = '0.5', hfactscale = 0.5),
+    Variations(rwgt_id='2',descr="mu_res=2",      group_name="mu_res_variation",  group_combine="envelope",rensfact = '0.5', facsfact = '0.5', hfactscale = 2),
+    Variations(rwgt_id='3',descr="mu_F=mu_R=0.25", group_name="mu_scale_variation",group_combine="envelope",rensfact = '0.25', facsfact = '0.25', hfactscale = 1),
+    Variations(rwgt_id='4',descr="mu_F=mu_R=1",group_name="mu_scale_variation",group_combine="envelope",rensfact = '1.0', facsfact = '1.0', hfactscale = 1)
+]
+
+# Fuctions which takes care of altering input file for uncertainty variations
+def writeVariationFiles(key=None,hfac=None):
+    for var in variations:
+        with open(os.path.join(key,'powheg.input')) as pwhg_file:
+            pwhg_cfg = pwhg_file.read()
+        cfg = pwhg_cfg
+        cfg = cfg.replace('compute_rwgt', 'compute_rwgt 1 !')
+        cfg = cfg.replace('lhrwgt_id'                ,'lhrwgt_id \''+var.rwgt_id+"\' !")                
+        cfg = cfg.replace('lhrwgt_descr'             ,'lhrwgt_descr \''             +var.descr+"\' !")
+        cfg = cfg.replace('lhrwgt_group_name'        ,'lhrwgt_group_name \''        +var.group_name+"\' !")
+        cfg = cfg.replace('lhrwgt_group_combine'     ,'lhrwgt_group_combine \''     +var.group_combine+"\' !")
+        cfg = cfg.replace('renscfact','renscfact '+var.rensfact+" !")
+        cfg = cfg.replace('facscfact','facscfact '+var.facsfact+" !")
+        cfg = cfg.replace('hfact','hfact '+str(int(round(var.hfactscale*hfac)))+" !") # multiply hfac by scale, and update config
+        
+        with open(os.path.join(key,'powheg'+var.rwgt_id+'.input'), "w") as outfile:
+            outfile.write(cfg)
+
+
+
 
 mvec = []
 qt = []
@@ -71,20 +119,30 @@ for pars in product(args.higgs_tanb.split(','), args.mass.split(','), args.contr
         key = '%s_%s_%s_%s_%s' % (HIGGS, MASS, TANB, CONT, SCALE)
         
         if args.step == 'lhe':
+            if os.path.isfile(os.path.join(key,'pwgevents.lhe')):
+                print ("File %s exists, will skip" % os.path.join(key,'pwgevents.lhe'))
+                continue
             cfg = pwhg_cfg
             cfg = cfg.replace('{HFACT}', str(int(round(gr[SCALE].Eval(float(MASS))))))
             if CONT == 't':
                 cfg += 'nobot 1\n'
             if CONT == 'b':
                 cfg += 'notop 1\n'
-        
+                
             os.system('mkdir -p %s' % key)
 
             with open(os.path.join(key,'powheg.input'), "w") as outfile:
                 outfile.write(cfg)
-
+            if args.dovariations:
+                writeVariationFiles(key,gr[SCALE].Eval(float(MASS)))
             cmd = base_cmd
             cmd += 'pushd %s; %s/pwhg_main powheg.input' % (key, args.pwhg_dir)
+            cmd += '; cp powheg.input powheg0.input' # keep a seperate copy of the nominal powheg input file
+            if args.dovariations:
+                for var in variations:
+                    cmd += '; cp powheg%s.input powheg.input' % (var.rwgt_id)
+                    cmd += '; %s/pwhg_main powheg.input' % (args.pwhg_dir)
+                    cmd += "; mv pwgevents-rwgt.lhe pwgevents.lhe"
             cmd += '; popd'
             job_mgr.job_queue.append(cmd)
         

@@ -30,8 +30,8 @@ xupbound 2d0   ! increase upper bound for radiation generation
 
 ! OPTIONAL PARAMETERS
 
-#renscfact  1   ! (default 1d0) ren scale factor: muren  = muref * renscfact
-#facscfact  1   ! (default 1d0) fac scale factor: mufact = muref * facscfact
+renscfact  0.5   ! (default 1d0) ren scale factor: muren  = muref * renscfact
+facscfact  0.5   ! (default 1d0) fac scale factor: mufact = muref * facscfact
 #ptsupp     0d0   ! (default 0d0)  mass param for Born suppression factor (generation cut) If < 0 suppfact = 1
 #bornonly   1      ! (default 0) if 1 do Born only
 #smartsig   0      ! (default 1) remember equal amplitudes (0 do not remember)
@@ -47,6 +47,14 @@ hfact    {HFACT}    ! (default no dumping factor) dump factor for high-pt radiat
 #charmthrpdf  1.5  ! (default 1.5 GeV) pdf charm treshold
 #bottomthrpdf 5.0  ! (default 5.0 GeV) pdf bottom treshold
 withnegweights 1 ! use negative weights
+
+! reweighting information
+storeinfo_rwgt 1          ! store weight information in subsequent runs
+compute_rwgt 0            ! implement a weight, 0 for first nominal sample, 1 thereafter
+lhrwgt_id '0'               
+lhrwgt_descr 'NOMINAL'            
+lhrwgt_group_name 'NOMINAL'       
+lhrwgt_group_combine 'none'
 
 # mur,muf settings
 runningscale 0    ! 0 = scales equal to the Higgs pole mass; 1  = scales equal to the Higgs virtuality; 
@@ -90,3 +98,5 @@ higgstype {HIGGSTYPE}
 2HDMtype 2
 tanb {TANB}
 alpha 0.785398163397448d0
+!reweighing information (experimantal implementation by Guillermo)
+    
