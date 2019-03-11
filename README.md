@@ -38,6 +38,7 @@ The options are as follows:
  - `-H A:15`: The Higgs boson to generate, and the reference tan(beta) value to use. Can specify more than one, e.g. `A:15,H:30`.
  - `-c t:t,b:b,tb:tb,t:tb,b:tb`: List of contribution:scale choices to generate, e.g. t:tb means generate top-only contribution at the Q_tb resummation scale. The values of the scales are given in the `scales-higgs-mass-scan.dat` file, with the format `MASS Qt Qb Qtb`.
  - `--pwhg-dir`: Path to the process directory to use, can be changed for debugging purposes.
+ - '--dovariations' : Generate scale uncertainties.
  - The remaining settings control the job submission and are optional. By default each task will run interactively, one after another. But as these steps are typically CPU intensive it is useful to submit to a batch computing system. In this example jobs are submitted using the condor batch system at CERN. The `--sub-opts` option allows for additional lines to be added to the condor submit file that will be generated automatically.
  
  The input card used for POWHEG is `powheg.input`. This contains placeholders for the settings like mass, Higgs boson type and hfact value which should not be changed, but other settings can be changed as needed before running. The `launch_jobs.py` script will create a directory for each task, e.g. `A_100_15_t_tb`, corresponding to the `[HIGGS]_[MASS]_[TANB]_[CONTRIBUTION]_[SCALE]` settings used.
